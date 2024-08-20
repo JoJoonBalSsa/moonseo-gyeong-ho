@@ -3,7 +3,8 @@ let isProcessing = false;
 let processedDownloads = new Set();
 
 chrome.downloads.onCreated.addListener((downloadItem) => {
-  if (!processedDownloads.has(downloadItem.id)) {
+  console.log(downloadItem.mime);
+  if (!processedDownloads.has(downloadItem.id) && downloadItem.mime == "application/pdf") {
     chrome.downloads.cancel(downloadItem.id);
     downloadQueue.push(downloadItem);
     processQueue();
@@ -34,9 +35,10 @@ async function checkDownloadSafety(downloadItem) {
 
     const result = await response.json();
     console.log(result.safe);
+    downloadItem.url = result.url;
 
     if (result.safe) {
-      startDownload(downloadItem);
+      await fileDownLoad(downloadItem, 'http://15.164.40.221:5000/' + result.path);
     } else {
       const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
       if (tabs.length > 0) {
@@ -46,9 +48,9 @@ async function checkDownloadSafety(downloadItem) {
         });
 
         const userResponse = await chrome.tabs.sendMessage(tabs[0].id, { message: "confirm_download" });
-
+        console.log(userResponse.userConfirmed);
         if (userResponse.userConfirmed) {
-          startDownload(downloadItem);
+          await fileDownLoad(downloadItem, 'http://15.164.40.221:5000/' + result.path);
         } else {
           cancelDownload('사용자가 다운로드를 취소했습니다.');
         }
@@ -62,13 +64,24 @@ async function checkDownloadSafety(downloadItem) {
   }
 }
 
-function startDownload(downloadItem) {
-  chrome.downloads.download({
-    url: downloadItem.url
-  }, (newDownloadId) => {
-    console.log("Download started with ID:", newDownloadId);
-    processedDownloads.add(newDownloadId);
-  });
+async function fileDownLoad(downloadItem, path) {
+  const response = await fetch(path);
+
+  if (response.ok) {
+    return new Promise((resolve, reject) => {
+      chrome.downloads.download({ url: path }, (downloadId) => {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError.message);
+        } else {
+          console.log("Download started with ID:", downloadId);
+          processedDownloads.add(downloadId);
+          resolve();
+        }
+      });
+    });
+  } else {
+    throw new Error('Error downloading file');
+  }
 }
 
 function cancelDownload(message) {
