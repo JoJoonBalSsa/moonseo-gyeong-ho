@@ -4,7 +4,7 @@ from flask import Flask, request, jsonify, send_file
 import requests
 import re
 
-from preprocess_predict import validate_model
+from preprocess_predict import use_model
 
 from pathlib import Path
 from typing import Union, Literal, List
@@ -13,8 +13,8 @@ from PyPDF2 import PdfWriter, PdfReader, PageObject
 app = Flask(__name__)
 
 # 모델 및 스케일러 경로 설정
-model_path = './iforest_byte_model.pkl'
-scaler_path = './scaler.pkl'
+model_path = './iforest_byte_model7.pkl'
+scaler_path = './scaler7.pkl'
 
 
 @app.route('/sus')
@@ -26,6 +26,7 @@ def downloadfile():
         return send_file("./sus.pdf", as_attachment=True)
     except FileNotFoundError:
         return "File not found!", 404
+    
     
 @app.route('/sused')
 def downloadfile():
@@ -48,10 +49,9 @@ def receive_data():
     download_file(url, client_ip)
 
     pdf_path = './sus.pdf'  # 테스트용 PDF 경로 설정
-    res = validate_model(model_path, pdf_path, scaler_path)
+    index = use_model(model_path, scaler_path, pdf_path)
 
-
-    if res == 1 :
+    if index == [] :
         response_data = {
             'safe': 1,
             'path' : "sus",
@@ -61,11 +61,10 @@ def receive_data():
         output_path = "./sused.pdf"
         stamp_pdf_path = "./moonseo_icon.pdf"
 
-        index = [1] #여기다가 스탬프 찍을 인덱스
-
-        erase_page_content(pdf_path, output_path, index)  # 인덱스는 배열
-        stamp(output_path, stamp_pdf_path, output_path, index)
-
+        for i in index:
+            erase_page_content(pdf_path, output_path, i)  # 인덱스는 배열
+            stamp(output_path, stamp_pdf_path, output_path, i)
+            pdf_path = output_path
 
         response_data = {
             'safe': 0,
