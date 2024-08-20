@@ -29,7 +29,7 @@ def downloadfile():
     
     
 @app.route('/sused')
-def downloadfile():
+def downloadedfile():
     # 파일 경로를 지정합니다.
     #file_path = f'/{filename}'
 
