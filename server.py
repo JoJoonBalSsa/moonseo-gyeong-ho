@@ -15,8 +15,9 @@ def receive_data():
     client_ip = request.remote_addr
     download_file(url, client_ip)
 
+
     response_data = {
-        'safe': '0',
+        'safe': 0,
     }
     
     return jsonify(response_data)
