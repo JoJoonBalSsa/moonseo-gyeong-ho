@@ -58,7 +58,7 @@ def download_file(url, client_ip):
   Returns:
     None
   """
-  save_path = "sus.pdf"
+  save_path = "./sus.pdf"
 
   try:
     response = requests.get(url, stream=True)
