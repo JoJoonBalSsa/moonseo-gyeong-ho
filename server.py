@@ -56,13 +56,15 @@ def download_file(url, client_ip):
     
     if True :
         try : 
-            response = requests.post('http://' + client_ip, data={'message': f'Data received successfully from {client_ip}', 'safe': 1})
+            print(client_ip)
+            response = requests.post('http://' + client_ip, data={'safe': 1})
+            print("is working...?")
             response.raise_for_status()  # HTTP 상태 코드 검사
             print(f"Success sending to {client_ip}")       
         except e:
            print("error sending response")
     else :
-        response = requests.post('http://' + client_ip, data={'message': f'Data received successfully from {client_ip}', 'safe': 0})
+        response = requests.post('http://' + client_ip, data={'safe': 0})
         response.raise_for_status()  # HTTP 상태 코드 검사
         print(f"Success sending to {client_ip}")    
 
