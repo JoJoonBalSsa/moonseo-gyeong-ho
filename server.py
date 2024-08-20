@@ -37,7 +37,7 @@ def receive_data():
         url = downloadfile("./sus.pdf")
         response_data = {
             'safe': 1,
-            'url' : url,
+            'url' : url
         }
         
     else :
@@ -54,7 +54,7 @@ def receive_data():
 
         response_data = {
             'safe': 0,
-            'url' : url,
+            'url' : url
         }
     
     return jsonify(response_data)
