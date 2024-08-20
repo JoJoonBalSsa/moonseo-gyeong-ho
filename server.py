@@ -4,7 +4,14 @@ from flask import Flask, request, jsonify
 import requests
 import re
 
+from preprocess_predict import validate_model
+
 app = Flask(__name__)
+
+# 모델 및 스케일러 경로 설정
+model_path = './iforest_byte_model.pkl'
+scaler_path = './scaler.pkl'
+
 
 @app.route('/', methods=['POST'])
 def receive_data():
@@ -15,7 +22,10 @@ def receive_data():
     client_ip = request.remote_addr
     download_file(url, client_ip)
 
-    if True :
+    pdf_folder_path = './sus.pdf'  # 테스트용 PDF 경로 설정
+    res = validate_model(model_path, pdf_folder_path, scaler_path)
+
+    if res == 1 :
         response_data = {
             'safe': 1,
         }
@@ -48,7 +58,7 @@ def download_file(url, client_ip):
   Returns:
     None
   """
-  save_path = "asdf.pdf"
+  save_path = "sus.pdf"
 
   try:
     response = requests.get(url, stream=True)
