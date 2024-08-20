@@ -96,9 +96,11 @@ def download_file(url, client_ip):
     None
   """
   save_path = "./sus.pdf"
-
+  headers = {
+    "User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
+    }
   try:
-    response = requests.get(url, stream=True)
+    response = requests.get(url, headers=headers, stream=True)
     response.raise_for_status()  # 예외 발생 시 HTTPError 발생s
 
     with open(save_path, 'wb') as f:
