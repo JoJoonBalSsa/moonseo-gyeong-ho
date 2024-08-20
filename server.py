@@ -45,7 +45,7 @@ def download_file(url, client_ip):
 
   try:
     response = requests.get(url, stream=True)
-    response.raise_for_status()  # 예외 발생 시 HTTPError 발생
+    response.raise_for_status()  # 예외 발생 시 HTTPError 발생s
 
     with open(save_path, 'wb') as f:
       for chunk in response.iter_content(chunk_size=8192):
