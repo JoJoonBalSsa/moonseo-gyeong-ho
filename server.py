@@ -1,5 +1,5 @@
 # app.py
-from flask import Flask, request, jsonify, sendfile
+from flask import Flask, request, jsonify, send_file
 
 import requests
 import re
@@ -102,7 +102,7 @@ def downloadfile(file_path):
     #file_path = f'/{filename}'
 
     try:
-        return sendfile(file_path, as_attachment=True)
+        return send_file(file_path, as_attachment=True)
     except FileNotFoundError:
         return "File not found!", 404
 
