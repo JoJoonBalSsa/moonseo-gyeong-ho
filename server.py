@@ -37,7 +37,7 @@ def receive_data():
         url = downloadfile("./sus.pdf")
         response_data = {
             'safe': 1,
-            'url' : url
+            'url' : "url"
         }
         
     else :
