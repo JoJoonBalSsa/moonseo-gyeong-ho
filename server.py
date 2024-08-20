@@ -27,12 +27,12 @@ def receive_data():
 
     if res == 1 :
         response_data = {
-            'safe': 0,
+            'safe': 1,
         }
         
     else :
         response_data = {
-            'safe': 1,
+            'safe': 0,
         }
     
     return jsonify(response_data)
