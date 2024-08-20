@@ -41,10 +41,7 @@ def download_file(url, client_ip):
   Returns:
     None
   """
-  save_path = "~/"
-  a = random.randint
-
-  save_path = save_path + a + ".pdf"
+  save_path = "~/asdf.pdf"
 
   try:
     response = requests.get(url, stream=True)
