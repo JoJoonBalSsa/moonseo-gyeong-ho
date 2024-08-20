@@ -55,7 +55,7 @@ def receive_data():
             'safe': 0,
         }
     
-    return jsonify(response_data)
+    return jsonify(response_data), url
 
 def extract_url(data):
     url_pattern = r'https?://\S+'  # 간단한 URL 패턴 예시
