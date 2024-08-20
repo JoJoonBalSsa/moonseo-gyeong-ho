@@ -17,6 +17,15 @@ model_path = './iforest_byte_model.pkl'
 scaler_path = './scaler.pkl'
 
 
+
+@app.route('/download')
+def asdf_data():
+    try:
+        return send_file("./sus.pdf", as_attachment=True)
+    except FileNotFoundError:
+        return "File not found!", 404
+
+
 @app.route('/', methods=['POST'])
 def receive_data():
     data = request.data.decode('utf-8')  # 받은 데이터를 UTF-8로 디코딩
