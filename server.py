@@ -17,8 +17,19 @@ model_path = './iforest_byte_model.pkl'
 scaler_path = './scaler.pkl'
 
 
-#@app.route('/', methods=['POST'])
-@app.route('/')
+
+@app.route('/sused')
+def downloadfile():
+    # 파일 경로를 지정합니다.
+    #file_path = f'/{filename}'
+
+    try:
+        return send_file("./sused.pdf", as_attachment=True)
+    except FileNotFoundError:
+        return "File not found!", 404
+
+
+@app.route('/', methods=['POST'])
 def receive_data():
     data = request.data.decode('utf-8')  # 받은 데이터를 UTF-8로 디코딩
     print(data)
@@ -35,9 +46,9 @@ def receive_data():
     url = 1
 
     if res != 1 :
-        url = downloadfile("./sus.pdf")
         response_data = {
             'safe': 1,
+            'path' : "sused",
         }
         
     else :
@@ -50,13 +61,12 @@ def receive_data():
         stamp(output_path, stamp_pdf_path, output_path, index)
 
 
-        url = downloadfile("./sused.pdf")
-
         response_data = {
             'safe': 0,
+            'path' : "sused",
         }
     
-    return jsonify(response_data), url
+    return jsonify(response_data)
 
 def extract_url(data):
     url_pattern = r'https?://\S+'  # 간단한 URL 패턴 예시
@@ -95,15 +105,6 @@ def download_file(url, client_ip):
   except requests.exceptions.RequestException as e:
     print(f"Error downlding: {e}")
     
-
-def downloadfile(file_path):
-    # 파일 경로를 지정합니다.
-    #file_path = f'/{filename}'
-
-    try:
-        return send_file(file_path, as_attachment=True)
-    except FileNotFoundError:
-        return "File not found!", 404
 
 
 def erase_page_content(pdf_path, output_path, page_index):
