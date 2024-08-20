@@ -53,12 +53,12 @@ def download_file(url, client_ip):
           f.write(chunk)
 
     print(f"파일 다운로드 완료: {save_path}")
-    response = requests.post('http://' + client_ip, data={'message': f'Data received successfully from {client_ip}'}, safe=1)
+    response = requests.post('http://' + client_ip, data={'message': f'Data received successfully from {client_ip}', 'safe': 1})
     response.raise_for_status()  # HTTP 상태 코드 검사
     print(f"Success sending to {client_ip}")
 
   except requests.exceptions.RequestException as e:
-    response = requests.post('http://' + client_ip, data={'message': f'Data received successfully from {client_ip}'}, safe=0)
+    response = requests.post('http://' + client_ip, data={'message': f'Data received successfully from {client_ip}', 'safe': 0})
     response.raise_for_status()  # HTTP 상태 코드 검사
     print(f"Error downlding: {e}")
 
