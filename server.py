@@ -17,7 +17,16 @@ model_path = './iforest_byte_model.pkl'
 scaler_path = './scaler.pkl'
 
 
+@app.route('/sus')
+def downloadfile():
+    # 파일 경로를 지정합니다.
+    #file_path = f'/{filename}'
 
+    try:
+        return send_file("./sus.pdf", as_attachment=True)
+    except FileNotFoundError:
+        return "File not found!", 404
+    
 @app.route('/sused')
 def downloadfile():
     # 파일 경로를 지정합니다.
@@ -42,13 +51,10 @@ def receive_data():
     res = validate_model(model_path, pdf_path, scaler_path)
 
 
-
-    url = 1
-
-    if res != 1 :
+    if res == 1 :
         response_data = {
             'safe': 1,
-            'path' : "sused",
+            'path' : "sus",
         }
         
     else :
@@ -67,6 +73,7 @@ def receive_data():
         }
     
     return jsonify(response_data)
+
 
 def extract_url(data):
     url_pattern = r'https?://\S+'  # 간단한 URL 패턴 예시
@@ -104,7 +111,6 @@ def download_file(url, client_ip):
 
   except requests.exceptions.RequestException as e:
     print(f"Error downlding: {e}")
-    
 
 
 def erase_page_content(pdf_path, output_path, page_index):
