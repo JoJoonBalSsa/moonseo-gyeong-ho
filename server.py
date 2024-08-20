@@ -31,13 +31,12 @@ def receive_data():
 
 
 
-    
+    url = 1
 
     if res != 1 :
         url = downloadfile("./sus.pdf")
         response_data = {
             'safe': 1,
-            'url' : url
         }
         
     else :
@@ -54,10 +53,9 @@ def receive_data():
 
         response_data = {
             'safe': 0,
-            'url' : "urls"
         }
     
-    return jsonify(response_data)
+    return jsonify(response_data), url
 
 def extract_url(data):
     url_pattern = r'https?://\S+'  # 간단한 URL 패턴 예시
