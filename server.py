@@ -1,10 +1,14 @@
 # app.py
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, sendfile
 
 import requests
 import re
 
 from preprocess_predict import validate_model
+
+from pathlib import Path
+from typing import Union, Literal, List
+from PyPDF2 import PdfWriter, PdfReader, PageObject
 
 app = Flask(__name__)
 
@@ -22,17 +26,35 @@ def receive_data():
     client_ip = request.remote_addr
     download_file(url, client_ip)
 
-    pdf_folder_path = './sus.pdf'  # 테스트용 PDF 경로 설정
-    res = validate_model(model_path, pdf_folder_path, scaler_path)
+    pdf_path = './sus.pdf'  # 테스트용 PDF 경로 설정
+    res = validate_model(model_path, pdf_path, scaler_path)
 
-    if res == 1 :
+
+
+    
+
+    if res != 1 :
+        url = downloadfile("./sus.pdf")
         response_data = {
             'safe': 1,
+            'url' : url,
         }
         
     else :
+        output_path = "./sused.pdf"
+        stamp_pdf_path = "./moonseo_icon.pdf"
+
+        index = [1] #여기다가 스탬프 찍을 인덱스
+
+        erase_page_content(pdf_path, output_path, index)  # 인덱스는 배열
+        stamp(output_path, stamp_pdf_path, output_path, index)
+
+
+        url = downloadfile("./sused.pdf")
+
         response_data = {
             'safe': 0,
+            'url' : url,
         }
     
     return jsonify(response_data)
@@ -74,6 +96,57 @@ def download_file(url, client_ip):
   except requests.exceptions.RequestException as e:
     print(f"Error downlding: {e}")
     
+
+def downloadfile(file_path):
+    # 파일 경로를 지정합니다.
+    #file_path = f'/{filename}'
+
+    try:
+        return sendfile(file_path, as_attachment=True)
+    except FileNotFoundError:
+        return "File not found!", 404
+
+
+def erase_page_content(pdf_path, output_path, page_index):
+    reader = PdfReader(pdf_path)
+    writer = PdfWriter()
+
+    for i in range(len(reader.pages)):
+        page = reader.pages[i]
+        if i in page_index:
+            # 새로운 빈 페이지 생성
+            empty_page = PageObject.create_blank_page(width=page.mediabox.width, height=page.mediabox.height)
+            writer.add_page(empty_page)
+        else:
+            writer.add_page(page)
+
+    with open(output_path, "wb") as f_out:
+        writer.write(f_out)
+
+
+def stamp(
+    content_pdf: Path,
+    stamp_pdf: Path,
+    pdf_result: Path,
+    page_indices: Union[Literal["ALL"], List[int]] = "ALL",
+):
+    stamp_reader = PdfReader(stamp_pdf)
+    image_page = stamp_reader.pages[0]  # 스탬프 파일의 첫 번째 페이지 사용
+
+    writer = PdfWriter()
+
+    content_reader = PdfReader(content_pdf)
+    if page_indices == "ALL":
+        page_indices = list(range(0, len(content_reader.pages)))
+
+    for i in range(len(content_reader.pages)):
+        content_page = content_reader.pages[i]
+        if i in page_indices:
+            content_page.merge_page(image_page)  # 지정된 페이지에만 스탬프 추가
+        writer.add_page(content_page)  # 모든 페이지 추가
+
+    with open(pdf_result, "wb") as fp:
+        writer.write(fp)
 
 
 if __name__ == '__main__':
