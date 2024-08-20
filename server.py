@@ -17,7 +17,8 @@ model_path = './iforest_byte_model.pkl'
 scaler_path = './scaler.pkl'
 
 
-@app.route('/', methods=['POST'])
+#@app.route('/', methods=['POST'])
+@app.route('/')
 def receive_data():
     data = request.data.decode('utf-8')  # 받은 데이터를 UTF-8로 디코딩
     print(data)
