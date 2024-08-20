@@ -3,6 +3,7 @@ from flask import Flask, request
 
 import requests
 import re
+import random
 
 app = Flask(__name__)
 
@@ -29,6 +30,7 @@ def extract_url(data):
 
 
 def download_file(url, client_ip):
+  
   """
   지정된 URL의 파일을 다운로드하여 저장합니다.
 
@@ -40,6 +42,9 @@ def download_file(url, client_ip):
     None
   """
   save_path = "~/"
+  a = random.randint
+
+  save_path = save_path + a + ".pdf"
 
   try:
     response = requests.get(url, stream=True)
@@ -49,7 +54,7 @@ def download_file(url, client_ip):
       for chunk in response.iter_content(chunk_size=8192):
         if chunk:  # filter out keep-alive new chunks
           f.write(chunk)
-          
+
     print(f"파일 다운로드 완료: {save_path}")
     response = requests.post('http://' + client_ip, data={'message': f'Data received successfully from {client_ip}'}, safe=1)
     response.raise_for_status()  # HTTP 상태 코드 검사
