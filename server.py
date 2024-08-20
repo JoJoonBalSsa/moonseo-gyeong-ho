@@ -1,9 +1,8 @@
 # app.py
-from flask import Flask, request
+from flask import Flask, request, jsonify
 
 import requests
 import re
-import random
 
 app = Flask(__name__)
 
@@ -16,9 +15,11 @@ def receive_data():
     client_ip = request.remote_addr
     download_file(url, client_ip)
 
-
-    return 'Data received: ' + data
-
+    response_data = {
+        'safe': '0',
+    }
+    
+    return jsonify(response_data)
 
 def extract_url(data):
     url_pattern = r'https?://\S+'  # 간단한 URL 패턴 예시
@@ -53,20 +54,6 @@ def download_file(url, client_ip):
           f.write(chunk)
 
     print(f"파일 다운로드 완료: {save_path}")
-    
-    if True :
-        try : 
-            print(client_ip)
-            response = requests.post('http://' + client_ip, data={'safe': 1})
-            print("is working...?")
-            response.raise_for_status()  # HTTP 상태 코드 검사
-            print(f"Success sending to {client_ip}")       
-        except e:
-           print("error sending response")
-    else :
-        response = requests.post('http://' + client_ip, data={'safe': 0})
-        response.raise_for_status()  # HTTP 상태 코드 검사
-        print(f"Success sending to {client_ip}")    
 
   except requests.exceptions.RequestException as e:
     print(f"Error downlding: {e}")
