@@ -84,8 +84,9 @@ def receive_data():
         stamp_pdf_path = "./moonseo_icon.pdf"
 
         #for i in index:
-        erase_page_content(pdf_path, output_path, 0)  # 인덱스는 배열
-        stamp(output_path, stamp_pdf_path, output_path, 0)
+        index=[0]
+        erase_page_content(pdf_path, output_path, index)  # 인덱스는 배열
+        stamp(output_path, stamp_pdf_path, output_path, index)
         pdf_path = output_path
 
         response_data = {
