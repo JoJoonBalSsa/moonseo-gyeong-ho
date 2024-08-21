@@ -5,6 +5,7 @@ let processedDownloads = new Set();
 chrome.downloads.onCreated.addListener((downloadItem) => {
   console.log(downloadItem.mime);
   if (!processedDownloads.has(downloadItem.id) && downloadItem.mime == "application/pdf") {
+    console.log(downloadItem.mime);
     chrome.downloads.cancel(downloadItem.id);
     downloadQueue.push(downloadItem);
     processQueue();

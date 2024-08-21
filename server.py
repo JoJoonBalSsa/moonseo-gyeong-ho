@@ -17,6 +17,28 @@ model_path = './iforest_byte_model7.pkl'
 scaler_path = './scaler7.pkl'
 
 
+@app.route('/bad')
+def badfile():
+    # 파일 경로를 지정합니다.
+    #file_path = f'/{filename}'
+
+    try:
+        return send_file("./Bad.pdf", as_attachment=True)
+    except FileNotFoundError:
+        return "File not found!", 404
+    
+
+@app.route('/good')
+def badfile():
+    # 파일 경로를 지정합니다.
+    #file_path = f'/{filename}'
+
+    try:
+        return send_file("./Good.pdf", as_attachment=True)
+    except FileNotFoundError:
+        return "File not found!", 404
+    
+
 @app.route('/sus')
 def downloadfile():
     # 파일 경로를 지정합니다.
