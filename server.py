@@ -15,28 +15,6 @@ app = Flask(__name__)
 # 모델 및 스케일러 경로 설정
 model_path = './iforest_byte_model7.pkl'
 scaler_path = './scaler7.pkl'
-
-
-@app.route('/bad')
-def badfile():
-    # 파일 경로를 지정합니다.
-    #file_path = f'/{filename}'
-
-    try:
-        return send_file("./Bad.pdf", as_attachment=True)
-    except FileNotFoundError:
-        return "File not found!", 404
-    
-
-@app.route('/good')
-def goodfile():
-    # 파일 경로를 지정합니다.
-    #file_path = f'/{filename}'
-
-    try:
-        return send_file("./Good.pdf", as_attachment=True)
-    except FileNotFoundError:
-        return "File not found!", 404
     
 
 @app.route('/sus')
@@ -56,7 +34,7 @@ def downloadedfile():
     #file_path = f'/{filename}'
 
     try:
-        return send_file("./sused.pdf", as_attachment=True)
+        return send_file("./output.pdf", as_attachment=True)
     except FileNotFoundError:
         return "File not found!", 404
 
@@ -73,7 +51,7 @@ def receive_data():
     pdf_path = './sus.pdf'  # 테스트용 PDF 경로 설정
     index = use_model(model_path, scaler_path, pdf_path)
 
-    if index == [] :
+    if index != [] :
         response_data = {
             'safe': 1,
             'path' : "sus",
