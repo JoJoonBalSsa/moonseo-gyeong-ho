@@ -23,7 +23,7 @@ def downloadfile():
     #file_path = f'/{filename}'
 
     try:
-        return send_file("./output.pdf", as_attachment=True)
+        return send_file("./sus.pdf", as_attachment=True)
     except FileNotFoundError:
         return "File not found!", 404
     
@@ -34,7 +34,7 @@ def downloadedfile():
     #file_path = f'/{filename}'
 
     try:
-        return send_file("./output.pdf", as_attachment=True)
+        return send_file("./sused.pdf", as_attachment=True)
     except FileNotFoundError:
         return "File not found!", 404
 
@@ -49,8 +49,8 @@ def receive_data():
     download_file(url, client_ip)
 
     pdf_path = './sus.pdf'  # 테스트용 PDF 경로 설정
-    #index = use_model(model_path, scaler_path, pdf_path)
-    index = [1]
+    index = use_model(model_path, scaler_path, pdf_path)
+    
     if index == [] :
         response_data = {
             'safe': 1,
@@ -58,13 +58,13 @@ def receive_data():
         }
         
     else :
-        # output_path = "./sused.pdf"
-        # stamp_pdf_path = "./moonseo_icon.pdf"
+        output_path = "./sused.pdf"
+        stamp_pdf_path = "./moonseo_icon.pdf"
 
-        # for i in index:
-        #     erase_page_content(pdf_path, output_path, index)  # 인덱스는 배열
-        #     stamp(output_path, stamp_pdf_path, output_path, index)
-        #     pdf_path = output_path
+        for i in index:
+            erase_page_content(pdf_path, output_path, index)  # 인덱스는 배열
+            stamp(output_path, stamp_pdf_path, output_path, index)
+            pdf_path = output_path
 
         response_data = {
             'safe': 0,
