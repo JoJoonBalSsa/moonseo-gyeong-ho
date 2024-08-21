@@ -23,12 +23,12 @@ def downloadfile():
     #file_path = f'/{filename}'
 
     try:
-        return send_file("./sus.pdf", as_attachment=True)
+        return send_file("./output.pdf", as_attachment=True)
     except FileNotFoundError:
         return "File not found!", 404
     
     
-@app.route('/', methods=['POST'])
+@app.route('/sused')
 def downloadedfile():
     # 파일 경로를 지정합니다.
     #file_path = f'/{filename}'
