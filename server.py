@@ -51,7 +51,7 @@ def receive_data():
     pdf_path = './sus.pdf'  # 테스트용 PDF 경로 설정
     index = use_model(model_path, scaler_path, pdf_path)
 
-    if index != [] :
+    if index == [] :
         response_data = {
             'safe': 1,
             'path' : "sus",
