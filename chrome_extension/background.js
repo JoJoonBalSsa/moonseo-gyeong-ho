@@ -34,12 +34,15 @@ async function checkDownloadSafety(downloadItem) {
       body: JSON.stringify({ url: downloadItem.url }),
     });
 
+    notification('진행중', '검증 중 입니다...');
+
     const result = await response.json();
     console.log(result.safe);
     downloadItem.url = result.url;
 
     if (result.safe) {
       await fileDownLoad(downloadItem, 'http://15.164.40.221:5000/' + result.path);
+      notification('완료', '다운로드 완료!')
     } else {
       const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
       if (tabs.length > 0) {
@@ -53,15 +56,15 @@ async function checkDownloadSafety(downloadItem) {
         if (userResponse.userConfirmed) {
           await fileDownLoad(downloadItem, 'http://15.164.40.221:5000/' + result.path);
         } else {
-          cancelDownload('사용자가 다운로드를 취소했습니다.');
+          notification('다운로드 취소', '사용자가 다운로드를 취소했습니다.');
         }
       } else {
-        cancelDownload('활성 탭을 찾을 수 없습니다.');
+        notification('재시도 해보세요!', '활성 탭을 찾을 수 없습니다.');
       }
     }
   } catch (error) {
     console.error('Error checking download safety:', error);
-    cancelDownload('다운로드 안전성 확인 중 오류가 발생했습니다.');
+    notification('오류 발견', '다운로드 안전성 확인 중 오류가 발생했습니다.');
   }
 }
 
@@ -85,11 +88,11 @@ async function fileDownLoad(downloadItem, path) {
   }
 }
 
-function cancelDownload(message) {
+function notification(title, message) {
   chrome.notifications.create({
     type: 'basic',
     iconUrl: 'images/icon-48.png',
-    title: '다운로드 취소됨',
+    title: title,
     message: message
   });
 }
