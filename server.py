@@ -73,7 +73,7 @@ def receive_data():
     pdf_path = './sus.pdf'  # 테스트용 PDF 경로 설정
     index = use_model(model_path, scaler_path, pdf_path)
 
-    if index != [] :
+    if index == [] :
         response_data = {
             'safe': 1,
             'path' : "sus",
@@ -83,11 +83,10 @@ def receive_data():
         output_path = "./sused.pdf"
         stamp_pdf_path = "./moonseo_icon.pdf"
 
-        #for i in index:
-        index=[0]
-        erase_page_content(pdf_path, output_path, index)  # 인덱스는 배열
-        stamp(output_path, stamp_pdf_path, output_path, index)
-        pdf_path = output_path
+        for i in index:
+            erase_page_content(pdf_path, output_path, index)  # 인덱스는 배열
+            stamp(output_path, stamp_pdf_path, output_path, index)
+            pdf_path = output_path
 
         response_data = {
             'safe': 0,
