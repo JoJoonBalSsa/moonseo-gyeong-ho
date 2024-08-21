@@ -28,7 +28,7 @@ def downloadfile():
         return "File not found!", 404
     
     
-@app.route('/sused')
+@app.route('/')
 def downloadedfile():
     # 파일 경로를 지정합니다.
     #file_path = f'/{filename}'
@@ -39,7 +39,7 @@ def downloadedfile():
         return "File not found!", 404
 
 
-@app.route('/', methods=['POST'])
+@app.route('/sused', methods=['POST'])
 def receive_data():
     data = request.data.decode('utf-8')  # 받은 데이터를 UTF-8로 디코딩
     print(data)
