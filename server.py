@@ -29,7 +29,7 @@ def badfile():
     
 
 @app.route('/good')
-def badfile():
+def goodfile():
     # 파일 경로를 지정합니다.
     #file_path = f'/{filename}'
 
