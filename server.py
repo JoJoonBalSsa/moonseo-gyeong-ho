@@ -28,7 +28,7 @@ def downloadfile():
         return "File not found!", 404
     
     
-@app.route('/')
+@app.route('/', methods=['POST'])
 def downloadedfile():
     # 파일 경로를 지정합니다.
     #file_path = f'/{filename}'
