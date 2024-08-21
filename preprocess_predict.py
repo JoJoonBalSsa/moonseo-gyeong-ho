@@ -5,8 +5,7 @@ import fitz  # PyMuPDF
 
 # PDF 파일에서 바이트 데이터 추출 (200KB 한정)
 def extract_bytes_from_pdf(pdf_path):
-    with open(pdf_path, 'rb') as file:
-    #with fitz.open(pdf_path) as file:
+    with fitz.open(pdf_path) as file:
         byte_data = []
         for page_num in range(len(file)):
             page = file.load_page(page_num)
